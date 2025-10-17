@@ -58,9 +58,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
 
-    // Hapus gambar tambahan (satu-satu)
+    // Hapus gambar tambahan (satu-satu) - beri nama unik
     Route::delete('/products/images/{id}', [ProductController::class, 'destroyImage'])
-        ->name('products.images.destroy');
+        ->name('products.images.destroy.single');
 });
 
 // Accessories
@@ -71,6 +71,14 @@ Route::middleware(['auth'])->group(function () {
 // New Arrival
 Route::middleware(['auth'])->group(function () {
     Route::resource('newarrival', NewArrivalController::class);
+
+    // Halaman detail (show) - sudah tidak bentrok dengan resource route
+    Route::get('/newarrival/{id}', [NewArrivalController::class, 'show'])
+        ->name('newarrival.detail');
+
+    // Hapus gambar via AJAX / manual - beri nama unik
+    Route::delete('/newarrival/images/{image}', [NewArrivalController::class, 'destroyImage'])
+        ->name('newarrival.images.destroy.single');
 });
 
 // Banner
@@ -85,19 +93,6 @@ Route::middleware(['auth'])->group(function () {
 
 // Detail Halaman Promo
 Route::get('/promo/{promo}', [PromoController::class, 'show'])->name('promoproducts.show');
-
-// Halaman detail (show)
-Route::get('/newarrival/{id}', [NewArrivalController::class, 'show'])->name('newarrival.show');
-
-Route::delete('/newarrival/images/{image}', [NewArrivalController::class, 'destroyImage'])->name('newarrival.images.destroy');
-
-// products
-Route::delete('/products/images/{id}', [ProductController::class, 'destroyImage'])
-     ->name('products.images.destroy');
-
-// Route khusus hapus gambar via AJAX (kalau nanti perlu)
-Route::delete('/newarrival/images/{id}', [NewArrivalController::class, 'destroyImage'])->name('newarrival.images.destroy');
-
 
 // Auth routes (login/register/logout)
 require __DIR__.'/auth.php';
